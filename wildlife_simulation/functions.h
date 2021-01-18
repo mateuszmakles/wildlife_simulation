@@ -5,6 +5,6 @@
 
 int getRandomNumber(int min, int max);
 
-void printWorld(int** tile);
+void printWorld(int** tile, int columns, int rows);
 
 #endif

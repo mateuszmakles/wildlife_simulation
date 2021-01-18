@@ -15,22 +15,21 @@ int main() {
 	int maxTurns;
 	// Entering world size
 	std::cout << "Please note that entering too many columns will look ugly.\n";
-	std::cout << "Enter a number of rows: ";
-	std::cin >> global::rows;
 	std::cout << "Enter a number of columns: ";
 	std::cin >> global::columns;
-	int** global::tile = new int* [global::rows]; // allocate an array of 10 int pointers — these are our rows
-	for (int i = 0; i < global::rows; ++i)
-		global::tile[i] = new int[global::columns]; // these are our columns
-	//std::vector<std::vector<int>> tile{};
+	std::cout << "Enter a number of rows: ";
+	std::cin >> global::rows;
+	int** tile = new int* [global::columns]; // allocate an array of 10 int pointers — these are our rows
+	for (int i = 0; i < global::columns; ++i) {
+		tile[i] = new int[global::rows]; // these are our columns
+	}
 
-	// assign "0" to each tile
-	for (int r = 0; r < global::rows; ++r) {
-		for (int c = 0; c < global::columns; ++c) {
-			tile[r][c] = 0;
+	for (int c = 0; c < global::columns; ++c) {
+		for (int r = 0; r < global::rows; ++r) {
+			tile[c][r] = 0;
 		}
 	}
-	printWorld(tile);
+	printWorld(tile, global::columns, global::rows);
 	
 	// Entering the amount of animals
 	int numAnimals, numPredators;
@@ -43,18 +42,19 @@ int main() {
 	// Non-predators first
 	animals.resize(numAnimals);
 	for (int i = 0; i < numAnimals; ++i) {
-		animals[i] = new Animal(static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, global::columns), getRandomNumber(0, global::rows));
+		animals[i] = new Animal(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, global::columns - 1), getRandomNumber(0, global::rows - 1));
 	}
 
 	// And now the predators
 	predators.resize(numPredators);
 	for (int i = 0; i < numPredators; ++i) {
-		predators[i] = new Predator(static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, global::columns), getRandomNumber(0, global::rows));
+		predators[i] = new Predator(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, global::columns - 1), getRandomNumber(0, global::rows - 1));
 	}
+	printWorld(tile, global::columns, global::rows);
 
 	// Entering a maximum number of turns
 	std::cout << "Enter the maximum number of turns: ";
-	std::cin >> maxTurns;
+	//std::cin >> maxTurns;
 
 	/*
 	std::cout << "\nDices:\n";
@@ -62,6 +62,10 @@ int main() {
 	std::cout << getRandomNumber(1, 10) << '\n';
 	std::cout << getRandomNumber(1, 20) << '\n';
 	*/
+	//for (int i = 0; i < global::columns; ++i)
+	//	delete[] tile[i];
+	//delete[] tile; // this needs to be done last
+
 	return 0;
 }
 
