@@ -1,4 +1,3 @@
-//#include "global.h"
 #include "classes.h"
 #include <iostream>
 #include <random> // for std::mt19937
@@ -13,19 +12,19 @@ int getRandomNumber(int min, int max) {
 
 //void printWorld(const Tiles& tile) {
 void printWorld(int** tile, int columns, int rows) {
-	std::cout << '\n' << ' ' << ' ';
+	std::cout << '\n' << ' ' << ' ' << ' ';
 	for (int i = 0; i < columns; ++i) {
 		std::cout << ' ' << i;
 	}
 	std::cout << '\n' << '\n' << '\n';
 	// Printing all tiles (with coordinates on the side (like in chess))
 	for (int r = 0; r < rows; ++r) {
-		std::cout << r << ' ';
+		std::cout << ' ' << r << ' ';
 		for (int c = 0; c < columns; ++c) {
 			if (tile[c][r] > 0)
 				std::cout << ' ' << tile[c][r];
 			else
-				std::cout << ' ' << 'O';
+				std::cout << ' ' << static_cast<char>(219);
 		}
 		std::cout << '\n' << '\n';
 	}

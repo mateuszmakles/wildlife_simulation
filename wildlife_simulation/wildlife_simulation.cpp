@@ -1,35 +1,40 @@
 // wildlife_simulation.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include "global.h"
 #include "classes.h"
 #include "functions.h"
 #include <iostream>
-#include <random> // for std::mt19937
-#include <ctime> // for std::time
+#include <random>
+#include <ctime>
 #include <vector>
 
 int main() {
+	// Variable declarations
 	std::vector<Animal*> animals;
 	std::vector<Predator*> predators;
-	int maxTurns;
-	// Entering world size
-	std::cout << "Please note that entering too many columns will look ugly.\n";
-	std::cout << "Enter a number of columns: ";
-	std::cin >> global::columns;
-	std::cout << "Enter a number of rows: ";
-	std::cin >> global::rows;
-	int** tile = new int* [global::columns]; // allocate an array of 10 int pointers — these are our rows
-	for (int i = 0; i < global::columns; ++i) {
-		tile[i] = new int[global::rows]; // these are our columns
-	}
+	int columns, rows, maxTurns, turn = 0;
 
-	for (int c = 0; c < global::columns; ++c) {
-		for (int r = 0; r < global::rows; ++r) {
+	// Entering world size
+	std::cout << "Please note that entering too many columns will make printed world look ugly.\n";
+	std::cout << "Enter a number of columns: ";
+	std::cin >> columns;
+	std::cout << "Enter a number of rows: ";
+	std::cin >> rows;
+
+	// Allocate a dynamic 2D array to represent our tiles...
+	int** tile = new int* [columns];
+	for (int i = 0; i < columns; ++i) {
+		tile[i] = new int[rows];
+	}
+	// ...and fill it with zeros
+	for (int c = 0; c < columns; ++c) {
+		for (int r = 0; r < rows; ++r) {
 			tile[c][r] = 0;
 		}
 	}
-	printWorld(tile, global::columns, global::rows);
+
+	// Let's call this function to see how our world looks
+	printWorld(tile, columns, rows);
 	
 	// Entering the amount of animals
 	int numAnimals, numPredators;
@@ -42,29 +47,27 @@ int main() {
 	// Non-predators first
 	animals.resize(numAnimals);
 	for (int i = 0; i < numAnimals; ++i) {
-		animals[i] = new Animal(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, global::columns - 1), getRandomNumber(0, global::rows - 1));
+		animals[i] = new Animal(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1));
 	}
 
 	// And now the predators
 	predators.resize(numPredators);
 	for (int i = 0; i < numPredators; ++i) {
-		predators[i] = new Predator(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, global::columns - 1), getRandomNumber(0, global::rows - 1));
+		predators[i] = new Predator(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1));
 	}
-	printWorld(tile, global::columns, global::rows);
+
+	// Numbers on tiles indicate how many animals are there
+	printWorld(tile, columns, rows);
 
 	// Entering a maximum number of turns
 	std::cout << "Enter the maximum number of turns: ";
 	//std::cin >> maxTurns;
 
-	/*
-	std::cout << "\nDices:\n";
-	std::cout << getRandomNumber(1, 6) << '\n';
-	std::cout << getRandomNumber(1, 10) << '\n';
-	std::cout << getRandomNumber(1, 20) << '\n';
-	*/
-	//for (int i = 0; i < global::columns; ++i)
-	//	delete[] tile[i];
-	//delete[] tile; // this needs to be done last
+	// Deallocating our 2D array
+	for (int i = 0; i < columns; ++i) {
+		delete[] tile[i];
+	}
+	delete[] tile;
 
 	return 0;
 }
