@@ -17,14 +17,19 @@ protected:
 	Sex gender;
 	int x, y;
 public:
-	Animal(int** tile, Sex g, int xx, int yy) : gender{ g }, x{ xx }, y{ yy } {
-		++tile[x][y];
-	}
+	Animal(int** tile, Sex g, int xx, int yy); // forward declaration
+
+	int getX() const { return x; }
+	int getY() const { return y; }
+
+	void moveX(int xx) { x+=xx; }
+	void moveY(int yy) { y+=yy; }
 };
 
 class Predator : public Animal {
 public:
-	Predator(int** tile, Sex g, int xx, int yy) : Animal{ tile,g,xx,yy } {}
+	Predator(int** tile, Sex g, int xx, int yy); // forward declaration
+	// I know this constructor is trivial but I wanted to keep consistency with Animal's constructor
 };
 
 class Tiles {

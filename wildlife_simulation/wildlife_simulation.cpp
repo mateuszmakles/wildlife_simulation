@@ -4,8 +4,6 @@
 #include "classes.h"
 #include "functions.h"
 #include <iostream>
-#include <random>
-#include <ctime>
 #include <vector>
 
 int main() {
@@ -62,6 +60,21 @@ int main() {
 	// Entering a maximum number of turns
 	std::cout << "Enter the maximum number of turns: ";
 	//std::cin >> maxTurns;
+
+	for (auto* element : animals) {
+		// Leaving the tile
+		--tile[element->getX()][element->getY()];
+		int direction = getRandomNumber(0, 3);
+		switch (direction) {
+		case 0: // go right
+			(element->getX() < columns - 1) ? direction = 1 : direction = -1;
+			element->moveX(direction);
+			++tile[element->getX()][element->getY()];
+			break;
+		case 1:
+
+		}
+	}
 
 	// Deallocating our 2D array
 	for (int i = 0; i < columns; ++i) {
