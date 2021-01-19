@@ -12,7 +12,7 @@ int getRandomNumber(int min, int max) {
 
 void printWorld(int** tile, int columns, int rows) {
 	// Printing all tiles (with coordinates on the side (like in chess))
-	std::cout << '\n' << ' ' << ' ' << ' ';
+	std::cout << '\n' << '\n' << ' ' << ' ' << ' ';
 	for (int c = 0; c < (columns <= 10 ? columns : 10); ++c) {
 		std::cout << ' ' << c;
 	}
@@ -29,31 +29,34 @@ void printWorld(int** tile, int columns, int rows) {
 		}
 		std::cout << '\n' << '\n';
 	}
+	for (int i = 0; i <= 50; ++i) std::cout << '_';
+	std::cout << '\n' << '\n';
 }
 
-void moveAnimals(int** tile, std::vector<Animal*>& animals, int columns, int rows) {
-	for (auto* element : animals) {
-		std::cout << '(' << element->getX() << ',' << element->getY() << ")\t"<<element->getName()<<" has moved to\t(";
-		--tile[element->getX()][element->getY()]; // leaving the current tile
-		int direction = getRandomNumber(0, 3);
-		switch (direction) {
-		case 0: // go right
-			element->getX() < columns - 1 ? direction = 1 : direction = -1; // if not on the edge go right, else go left
-			element->moveX(direction);
-			break;
-		case 1: // go left
-			element->getX() > 0 ? direction = -1 : direction = 1;
-			element->moveX(direction);
-			break;
-		case 2: // go down
-			element->getY() < rows - 1 ? direction = 1 : direction = -1;
-			element->moveY(direction);
-			break;
-		case 3: // go up
-			element->getY() > 0 ? direction = -1 : direction = 1;
-			element->moveY(direction);
+/*void eat(int** tile, std::vector<Predator>& predators, std::vector<Animal>& animals) {
+	for (auto& predator : predators) {
+		if (tile[predator->getX()][predator->getY()] > 1) {
+			for (auto& animal : animals) {
+				if (animal->getX() == predator->getX() && animal->getY() == predator->getY()) {
+					delete animal; // this animal has been eaten so let's delete it
+					static_cast<Predator*>(predator)->resetHunger(); // and reset the predator's hunger
+					std::cout << '(' << predator->getX() << ',' << predator->getY() << ") Predator has eaten an animal\n";
+					break; // predators can only eat once per turn so let's leave
+				}
+				else suffer(static_cast<Predator*>(predator));
+			}
 		}
-		++tile[element->getX()][element->getY()];
-		std::cout << element->getX() << ',' << element->getY() << ")\n";
+		else suffer(static_cast<Predator*>(predator));
 	}
 }
+
+void suffer(Predator* predator) {
+	predator->incrementHunger();
+	if (predator->isDead()) {
+		std::cout << '(' << predator->getX() << ',' << predator->getY() << ") Predator died from hunger\n";
+		delete predator;
+	}
+	else {
+		std::cout << '(' << predator->getX() << ',' << predator->getY() << ") Predator is hungry\n";
+	}
+}*/

@@ -7,10 +7,11 @@
 #include <vector>
 
 int main() {
+
 	// Variable declarations
-	std::vector<Animal*> animals;
-	std::vector<Animal*> predators;
-	int columns, rows, maxTurns, turn = 0;
+	std::vector<Animal> animals;
+	std::vector<Predator> predators;
+	int columns, rows, numOfAnimals, numOfPredators, maxTurns, turn = 0;
 
 	// Entering world size
 	std::cout << "For simplicity, all non-predators will be referred simply to animals.\n";
@@ -36,23 +37,24 @@ int main() {
 	printWorld(tile, columns, rows);
 	
 	// Entering the amount of animals
-	int numAnimals, numPredators;
 	std::cout << "How many non-predators to spawn? ";
-	std::cin >> numAnimals;
-	std::cout << "How many predators to spawn? ";
-	std::cin >> numPredators;
+	std::cin >> numOfAnimals;
+	std::cout << "How many predators to spawn?     ";
+	std::cin >> numOfPredators;
 
 	// Putting animals into their respective vectors
 	// Non-predators first
-	animals.resize(numAnimals);
-	for (int i = 0; i < numAnimals; ++i) {
-		animals[i] = new Animal(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1));
+	//animals.resize(numAnimals);
+	for (int i = 0; i < numOfAnimals; ++i) {
+		animals.push_back(Animal(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1)));
+		//animals[i] = Animal(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1));
 	}
 
 	// And now the predators
-	predators.resize(numPredators);
-	for (int i = 0; i < numPredators; ++i) {
-		predators[i] = new Predator(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1));
+	//predators.resize(numPredators);
+	for (int i = 0; i < numOfPredators; ++i) {
+		predators.push_back(Predator(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1)));
+		//predators[i] = Predator(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1));
 	}
 
 	// Numbers on tiles indicate how many animals are there
@@ -62,11 +64,18 @@ int main() {
 	//std::cout << "Enter the maximum number of turns: ";
 	//std::cin >> maxTurns;
 
-	moveAnimals(tile, animals, columns, rows);
-	moveAnimals(tile, predators, columns, rows);
-	printWorld(tile, columns, rows);
+	for (int i = 0; i < 5; ++i) {
+		for (auto& element : animals) {
+			element.move(tile, columns, rows);
+		}
+		for (auto& element : predators) {
+			element.move(tile, columns, rows);
+			//element.eat(tile, animals);
+		}
+		printWorld(tile, columns, rows);
+	}
 
-	// Deallocating our 2D array
+	// Deallocating our 2D tiles array
 	for (int i = 0; i < columns; ++i) {
 		delete[] tile[i];
 	}

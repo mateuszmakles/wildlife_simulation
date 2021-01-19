@@ -7,6 +7,8 @@ int getRandomNumber(int min, int max);
 
 void printWorld(int** tile, int columns, int rows);
 
-void moveAnimals(int** tile, std::vector<Animal*>& animals, int columns, int rows);
+//void eat(int** tile, std::vector<Predator>& predators, std::vector<Animal>& animals);
+
+//void suffer(Predator* predator);
 
 #endif

@@ -1,9 +1,9 @@
 #ifndef CLASSES_H
 #define CLASSES_H
 
-#include <vector>
 #include <string>
 #include <string_view>
+#include <vector>
 
 // Forward declarations for classes
 
@@ -26,28 +26,23 @@ public:
 	int getY() const { return y; }
 	std::string_view getName() const { return name; }
 
-	void moveX(int xx) { x+=xx; }
-	void moveY(int yy) { y+=yy; }
+	void moveX(int dir) { x+=dir; }
+	void moveY(int dir) { y+=dir; }
+
+	void move(int** tile, int columns, int rows); // forward declaration
 };
 
 class Predator : public Animal {
+	int hunger; // predator dies when it reaches 2
 public:
 	Predator(int** tile, Sex g, int xx, int yy); // forward declaration
 	// I know this constructor is trivial but I wanted to keep consistency with Animal's constructor
-};
 
-class Tiles {
-	std::vector<std::vector<int>> animalCount;
-	std::vector<std::vector<std::vector<Animal*>>> animals;
-public:
-	Tiles(int rows, int columns) {
-		for (int r = 0; r < rows; ++r) {
-			for (int c = 0; c < columns; ++c) {
-				animalCount[r][c] = 0;
-				animals[r][c][0] = nullptr;
-			}
-		}
-	}
+	void resetHunger() { hunger = 0; }
+	void incrementHunger() { ++hunger; }
+	bool isDead() { return (hunger >= 2); }
+
+	bool eat(int** tile, std::vector<Animal>& animals); // forward declaration
 };
 
 #endif
