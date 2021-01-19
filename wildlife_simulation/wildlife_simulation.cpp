@@ -9,14 +9,15 @@
 int main() {
 	// Variable declarations
 	std::vector<Animal*> animals;
-	std::vector<Predator*> predators;
+	std::vector<Animal*> predators;
 	int columns, rows, maxTurns, turn = 0;
 
 	// Entering world size
-	std::cout << "Please note that entering too many columns will make printed world look ugly.\n";
+	std::cout << "For simplicity, all non-predators will be referred simply to animals.\n";
+	std::cout << "Please note that entering too many columns will make printed world look ugly.\n\n";
 	std::cout << "Enter a number of columns: ";
 	std::cin >> columns;
-	std::cout << "Enter a number of rows: ";
+	std::cout << "Enter a number of rows:    ";
 	std::cin >> rows;
 
 	// Allocate a dynamic 2D array to represent our tiles...
@@ -58,23 +59,12 @@ int main() {
 	printWorld(tile, columns, rows);
 
 	// Entering a maximum number of turns
-	std::cout << "Enter the maximum number of turns: ";
+	//std::cout << "Enter the maximum number of turns: ";
 	//std::cin >> maxTurns;
 
-	for (auto* element : animals) {
-		// Leaving the tile
-		--tile[element->getX()][element->getY()];
-		int direction = getRandomNumber(0, 3);
-		switch (direction) {
-		case 0: // go right
-			(element->getX() < columns - 1) ? direction = 1 : direction = -1;
-			element->moveX(direction);
-			++tile[element->getX()][element->getY()];
-			break;
-		case 1:
-
-		}
-	}
+	moveAnimals(tile, animals, columns, rows);
+	moveAnimals(tile, predators, columns, rows);
+	printWorld(tile, columns, rows);
 
 	// Deallocating our 2D array
 	for (int i = 0; i < columns; ++i) {

@@ -2,6 +2,8 @@
 #define CLASSES_H
 
 #include <vector>
+#include <string>
+#include <string_view>
 
 // Forward declarations for classes
 
@@ -16,11 +18,13 @@ public:
 protected:
 	Sex gender;
 	int x, y;
+	std::string name;
 public:
-	Animal(int** tile, Sex g, int xx, int yy); // forward declaration
+	Animal(int** tile, Sex g, int xx, int yy, std::string n = "Animal"); // forward declaration
 
 	int getX() const { return x; }
 	int getY() const { return y; }
+	std::string_view getName() const { return name; }
 
 	void moveX(int xx) { x+=xx; }
 	void moveY(int yy) { y+=yy; }
