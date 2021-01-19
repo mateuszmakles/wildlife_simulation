@@ -46,14 +46,14 @@ int main() {
 	// Non-predators first
 	animals.reserve(numOfAnimals);
 	for (int i = 0; i < numOfAnimals; ++i) {
-		animals.push_back(Animal(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1)));
+		animals.push_back(Animal(tile, animals, getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1)));
 		//animals[i] = Animal(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1));
 	}
 
 	// And now the predators
 	predators.reserve(numOfPredators);
 	for (int i = 0; i < numOfPredators; ++i) {
-		predators.push_back(Predator(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1)));
+		predators.push_back(Predator(tile, predators, getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1)));
 		//predators[i] = Predator(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1));
 	}
 
@@ -66,15 +66,24 @@ int main() {
 
 	for (int i = 0; i < 5; ++i) {
 		for (int i = 0; i < animals.size(); ++i) {
+
 			animals[i].move(tile, columns, rows);
 
 			// If didn't breed yet this turn try to
 			if (animals[i].canBreed()) {
-				animals[i].breed(tile, animals);
+				animals[i].breed(tile);
 			}
 		}
 		for (int i = 0; i < predators.size(); ++i) {
+
 			predators[i].move(tile, columns, rows);
+
+			// If didn't breed yet this turn try to
+			if (predators[i].canBreed()) {
+				predators[i].breed(tile);
+			}
+
+			// The eating part
 			if (!predators[i].eat(tile, animals)) {
 				predators[i].incrementHunger();
 				if (predators[i].isDead()) {
