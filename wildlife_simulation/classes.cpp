@@ -86,9 +86,9 @@ void Predator::breed(int** tile) {
 }
 
 bool Predator::eat(int** tile, std::vector<Animal>& animals) {
-	// Checking if the predator is sharing his tile with food he could eat
+	// Checking if the predator is sharing his tile with potential dinner
 	if (tile[x][y] > 1) {
-		for (int i = 0; i < pvector->size(); ++i) {
+		for (int i = 0; i < animals.size(); ++i) {
 			if (animals[i].getX() == x && animals[i].getY() == y) {
 				animals.erase(animals.begin() + i); // this animal has been eaten so let's delete it
 				animals.shrink_to_fit();

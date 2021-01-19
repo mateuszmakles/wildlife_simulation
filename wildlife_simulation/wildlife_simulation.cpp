@@ -11,7 +11,7 @@ int main() {
 	// Variable declarations
 	std::vector<Animal> animals;
 	std::vector<Predator> predators;
-	int columns, rows, numOfAnimals, numOfPredators, maxTurns, turn = 0;
+	int columns, rows, numOfAnimals, numOfPredators, maxTurns, turn = 1;
 
 	// Entering world size
 	std::cout << "For simplicity, all non-predators will be referred simply to animals.\n";
@@ -35,12 +35,18 @@ int main() {
 
 	// Let's call this function to see how our world looks
 	printWorld(tile, columns, rows);
+
+	// Entering a maximum number of turns
+	std::cout << "Enter the maximum number of turns: ";
+	std::cin >> maxTurns;
+	std::cout << '\n';
 	
 	// Entering the amount of animals
 	std::cout << "How many non-predators to spawn? ";
 	std::cin >> numOfAnimals;
 	std::cout << "How many predators to spawn?     ";
 	std::cin >> numOfPredators;
+	std::cout << '\n';
 
 	// Putting animals into their respective vectors
 	// Non-predators first
@@ -60,11 +66,10 @@ int main() {
 	// Numbers on tiles indicate how many animals are there
 	printWorld(tile, columns, rows);
 
-	// Entering a maximum number of turns
-	//std::cout << "Enter the maximum number of turns: ";
-	//std::cin >> maxTurns;
+	do {
 
-	for (int i = 0; i < 5; ++i) {
+		std::cout << "\tTURN: " << turn << '\n' << '\n';
+
 		for (int i = 0; i < animals.size(); ++i) {
 
 			animals[i].move(tile, columns, rows);
@@ -105,7 +110,18 @@ int main() {
 		for (auto& element : predators) {
 			element.setBreed(0);
 		}
-	}
+
+		// Printing when simulation ends
+		if (animals.empty())
+			std::cout << "All animals are dead!\n";
+		if (predators.empty())
+			std::cout << "All predators are dead!\n";
+		if (turn == maxTurns)
+			std::cout << "Final turn reached!\n";
+
+		++turn;
+
+	} while (turn<=maxTurns && !animals.empty() && !predators.empty()); // change this if you want to be able to simulate only one type of animal
 
 	// Deallocating our 2D tiles array
 	for (int i = 0; i < columns; ++i) {
