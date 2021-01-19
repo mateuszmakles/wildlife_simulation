@@ -44,14 +44,14 @@ int main() {
 
 	// Putting animals into their respective vectors
 	// Non-predators first
-	//animals.resize(numAnimals);
+	animals.reserve(numOfAnimals);
 	for (int i = 0; i < numOfAnimals; ++i) {
 		animals.push_back(Animal(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1)));
 		//animals[i] = Animal(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1));
 	}
 
 	// And now the predators
-	//predators.resize(numPredators);
+	predators.reserve(numOfPredators);
 	for (int i = 0; i < numOfPredators; ++i) {
 		predators.push_back(Predator(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1)));
 		//predators[i] = Predator(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), getRandomNumber(0, columns - 1), getRandomNumber(0, rows - 1));
@@ -65,14 +65,37 @@ int main() {
 	//std::cin >> maxTurns;
 
 	for (int i = 0; i < 5; ++i) {
-		for (auto& element : animals) {
-			element.move(tile, columns, rows);
+		for (int i = 0; i < animals.size(); ++i) {
+			animals[i].move(tile, columns, rows);
+
+			// If didn't breed yet this turn try to
+			if (animals[i].canBreed()) {
+				animals[i].breed(tile, animals);
+			}
 		}
-		for (auto& element : predators) {
-			element.move(tile, columns, rows);
-			//element.eat(tile, animals);
+		for (int i = 0; i < predators.size(); ++i) {
+			predators[i].move(tile, columns, rows);
+			if (!predators[i].eat(tile, animals)) {
+				predators[i].incrementHunger();
+				if (predators[i].isDead()) {
+					// this predator died from hunger
+					--tile[predators[i].getX()][predators[i].getY()];
+					std::cout << "\tand died from hunger\n";
+					predators.erase(predators.begin() + i);
+					predators.shrink_to_fit();
+					--i; // correcting iteration now that's one element is gone
+				}
+			}
 		}
 		printWorld(tile, columns, rows);
+
+		// Resetting breeding
+		for (auto& element : animals) {
+			element.setBreed(0);
+		}
+		for (auto& element : predators) {
+			element.setBreed(0);
+		}
 	}
 
 	// Deallocating our 2D tiles array

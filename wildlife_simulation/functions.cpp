@@ -32,31 +32,3 @@ void printWorld(int** tile, int columns, int rows) {
 	for (int i = 0; i <= 50; ++i) std::cout << '_';
 	std::cout << '\n' << '\n';
 }
-
-/*void eat(int** tile, std::vector<Predator>& predators, std::vector<Animal>& animals) {
-	for (auto& predator : predators) {
-		if (tile[predator->getX()][predator->getY()] > 1) {
-			for (auto& animal : animals) {
-				if (animal->getX() == predator->getX() && animal->getY() == predator->getY()) {
-					delete animal; // this animal has been eaten so let's delete it
-					static_cast<Predator*>(predator)->resetHunger(); // and reset the predator's hunger
-					std::cout << '(' << predator->getX() << ',' << predator->getY() << ") Predator has eaten an animal\n";
-					break; // predators can only eat once per turn so let's leave
-				}
-				else suffer(static_cast<Predator*>(predator));
-			}
-		}
-		else suffer(static_cast<Predator*>(predator));
-	}
-}
-
-void suffer(Predator* predator) {
-	predator->incrementHunger();
-	if (predator->isDead()) {
-		std::cout << '(' << predator->getX() << ',' << predator->getY() << ") Predator died from hunger\n";
-		delete predator;
-	}
-	else {
-		std::cout << '(' << predator->getX() << ',' << predator->getY() << ") Predator is hungry\n";
-	}
-}*/

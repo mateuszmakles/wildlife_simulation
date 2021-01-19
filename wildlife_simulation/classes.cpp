@@ -1,17 +1,35 @@
 #include "classes.h"
-#include "functions.h"
+#include "functions.h" // for getRandomNumber()
 #include <iostream>
 #include <vector>
 
-Animal::Animal(int** tile, Sex g, int xx, int yy, std::string n) : gender{ g }, x{ xx }, y{ yy }, name{ n } {
+Animal::Animal(int** tile, Sex g, int xx, int yy, std::string n) : gender{ g }, x{ xx }, y{ yy }, name{ n }, hasBred{ 0 } {
 	// Adding this animal to the tile it's on (in order to keep track of the amount of animals on this tile)
 	++tile[x][y];
+	// and announcing its appearance
+	std::cout << '(' << x << ',' << y << ")\t" << printInfo() << " spawned!\n";
 }
 
 void Animal::move(int** tile, int columns, int rows) {
-	std::cout << '(' << x << ',' << y << ")\t" << name << " has moved to\t(";
+
+	int direction;
+
+	// Checking if we can move at all
+	if ((x == 0 && x == columns - 1) && (y == 0 && y == rows - 1)) {
+		std::cout << '(' << x << ',' << y << ")\t" << printInfo() << " couldn't move\n";
+		return; // there's only one tile (no place to move) so we're skipping the rest of the function
+	}
+	else if (x == 0 && x == columns - 1)
+		direction = getRandomNumber(2, 3);
+	else if (y == 0 && y == rows - 1)
+		direction = getRandomNumber(0, 1);
+	else
+		direction = getRandomNumber(0, 3);
+
+	std::cout << '(' << x << ',' << y << ")\t" << printInfo() << " has moved to\t(";
 	--tile[x][y]; // leaving the current tile
-	switch (getRandomNumber(0, 3)) {
+
+	switch (direction) {
 	case 0: // go right
 		x < columns - 1 ? ++x : --x; // if not on the edge go right, else go left
 		break;
@@ -24,19 +42,40 @@ void Animal::move(int** tile, int columns, int rows) {
 	case 3: // go up
 		y > 0 ? --y : ++y;
 	}
+
 	++tile[x][y];
 	std::cout << x << ',' << y << ")\n";
+}
+
+bool Animal::compare(const Animal& a) const {
+	return (gender != a.getGender() && a.canBreed());
+}
+
+void Animal::breed(int** tile, std::vector<Animal>& others) {
+	if (tile[x][y] > 1) {
+		for (auto& animal : others) {
+			if (animal.getX() == x && animal.getY() == y && compare(animal)) {
+				animal.setBreed(1);
+				hasBred = 1;
+				std::cout << "\tand bred\n";
+				others.push_back(Animal(tile, static_cast<Animal::Sex>(getRandomNumber(0, 1)), x, y));
+			}
+		}
+	}
 }
 
 Predator::Predator(int** tile, Sex g, int xx, int yy) : Animal{ tile,g,xx,yy,"Predator" }, hunger{ 0 } {}
 
 bool Predator::eat(int** tile, std::vector<Animal>& animals) {
+	// Checking if the predator is sharing his tile with food he could eat
 	if (tile[x][y] > 1) {
-		for (auto& animal : animals) {
-			if (animal.getX() == x && animal.getY() == y) {
-				//delete animal; // this animal has been eaten so let's delete it
+		for (int i = 0; i < animals.size(); ++i) {
+			if (animals[i].getX() == x && animals[i].getY() == y) {
+				animals.erase(animals.begin() + i); // this animal has been eaten so let's delete it
+				animals.shrink_to_fit();
+				--tile[x][y]; // one animal less on this tile
 				hunger = 0; // and reset the predator's hunger
-				std::cout << '(' << x << ',' << y << ")\tPredator has eaten an animal\n";
+				std::cout << "\tand has eaten an animal\n";
 				return true; // predators can only eat once per turn so let's leave
 			}
 			else return false;
