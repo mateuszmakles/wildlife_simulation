@@ -3,18 +3,22 @@
 #include <iostream>
 #include <vector>
 
+// Animal constructors
 Animal::Animal(int** tile, std::vector<Animal>& vect, int xx, int yy)
 	: vector{ &vect }, gender { static_cast<Animal::Sex>(getRandomNumber(0, 1)) }, x{ xx }, y{ yy }, hasBred{ 0 } {
+
 	// Adding this animal to the tile it's on (in order to keep track of the amount of animals on this tile)
 	++tile[x][y];
 	// and announcing its appearance
 	std::cout << '(' << x << ',' << y << ")\t" << printInfo() << "spawned!\n";
 }
-Animal::Animal(int** tile, int xx, int yy)
+
+Animal::Animal(int** tile, int xx, int yy) // this one is called when Predator is created
 	: gender{ static_cast<Animal::Sex>(getRandomNumber(0, 1)) }, x{ xx }, y{ yy }, hasBred{ 0 } {
 	++tile[x][y];
 }
 
+// Animal member functions
 void Animal::move(int** tile, int columns, int rows) {
 
 	int direction;
@@ -53,25 +57,29 @@ void Animal::move(int** tile, int columns, int rows) {
 }
 	
 void Animal::breed(int** tile) {
+
+	// Checking if we are sharing tile with potential mates
 	if (tile[x][y] > 1) {
 		for (auto& animal : *vector) {
-			if (animal.getX() == x && animal.getY() == y && compare(animal)) {
+			if (animal.getX() == x && animal.getY() == y && compare(animal)) { // if on the same tile, same gender and can breed
 				animal.setBreed(1);
 				hasBred = 1;
 				std::cout << "\tand bred\n";
-				vector->push_back(Animal(tile, *vector, x, y));
+				vector->push_back(Animal(tile, *vector, x, y)); // creating our child
 				return;
 			}
 		}
 	}
 }
 
+// Predator constructor
 Predator::Predator(int** tile, std::vector<Predator>& vect, int xx, int yy)
 	: Animal{ tile,xx,yy }, pvector{ &vect }, hunger{ 0 } {
 	std::cout << '(' << x << ',' << y << ")\t" << printInfo() << "spawned!\n";
 }
 
-void Predator::breed(int** tile) {
+// Predator member functions
+void Predator::breed(int** tile) { // this is an override from Animal
 	if (tile[x][y] > 1) {
 		for (auto& predator : *pvector) {
 			if (predator.getX() == x && predator.getY() == y && compare(predator)) {
@@ -86,6 +94,7 @@ void Predator::breed(int** tile) {
 }
 
 bool Predator::eat(int** tile, std::vector<Animal>& animals) {
+
 	// Checking if the predator is sharing his tile with potential dinner
 	if (tile[x][y] > 1) {
 		for (int i = 0; i < animals.size(); ++i) {
@@ -99,5 +108,5 @@ bool Predator::eat(int** tile, std::vector<Animal>& animals) {
 			}
 		}
 	}
-	return false;
+	return false; // predator was unable to eat
 }

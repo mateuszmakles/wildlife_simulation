@@ -5,12 +5,16 @@
 
 int getRandomNumber(int min, int max);
 
-bool validateInt(int input, int min);
+int validateInt(std::string_view str, int min);
 
 void printWorld(int** tile, int columns, int rows);
 
-//void eat(int** tile, std::vector<Predator>& predators, std::vector<Animal>& animals);
+void animalPhase(int** tile, std::vector<Animal>& animals, int columns, int rows);
 
-//void suffer(Predator* predator);
+void predatorPhase(int** tile, std::vector<Animal>& animals, std::vector<Predator>& predators, int columns, int rows);
+
+void resetBreed(std::vector<Animal>& animals, std::vector<Predator>& predators);
+
+void simulate(int** tile, std::vector<Animal>& animals, std::vector<Predator>& predators, int columns, int rows, int turn);
 
 #endif
