@@ -16,8 +16,10 @@ int main() {
 	// Entering world size
 	std::cout << "For simplicity, all non-predators will be referred simply to animals.\n";
 	std::cout << "Please note that entering too many columns will make printed world look ugly.\n\n";
-	std::cout << "Enter a number of columns: ";
-	std::cin >> columns;
+	do {
+		std::cout << "Enter a number of columns: ";
+		std::cin >> columns;
+	} while (!validateInt(columns, 1));
 	std::cout << "Enter a number of rows:    ";
 	std::cin >> rows;
 

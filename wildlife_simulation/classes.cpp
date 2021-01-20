@@ -90,15 +90,14 @@ bool Predator::eat(int** tile, std::vector<Animal>& animals) {
 	if (tile[x][y] > 1) {
 		for (int i = 0; i < animals.size(); ++i) {
 			if (animals[i].getX() == x && animals[i].getY() == y) {
-				animals.erase(animals.begin() + i); // this animal has been eaten so let's delete it
-				animals.shrink_to_fit();
 				--tile[x][y]; // one animal less on this tile
 				hunger = 0; // and reset the predator's hunger
 				std::cout << "\tand has eaten an animal\n";
+				animals.erase(animals.begin() + i); // this animal has been eaten so let's delete it
+				animals.shrink_to_fit();
 				return true; // predators can only eat once per turn so let's leave
 			}
-			else return false;
 		}
 	}
-	else return false;
+	return false;
 }

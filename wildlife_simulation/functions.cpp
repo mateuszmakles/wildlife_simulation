@@ -10,6 +10,10 @@ int getRandomNumber(int min, int max) {
 	return roll(mersenne);
 }
 
+bool validateInt(int input, int min) {
+
+}
+
 void printWorld(int** tile, int columns, int rows) {
 	// Printing all tiles (with coordinates on the side (like in chess))
 	std::cout << '\n' << '\n' << ' ' << ' ' << ' ';
